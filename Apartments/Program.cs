@@ -1,7 +1,12 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Apartments.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddDbContext<ApartmentsContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ApartmentsContext") ?? throw new InvalidOperationException("Connection string 'ApartmentsContext' not found.")));
 
 var app = builder.Build();
 
