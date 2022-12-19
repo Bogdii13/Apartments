@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\apartments\" />
+    <Folder Include="Pages\categories\" />
+    <Folder Include="Pages\agents\" />
+    <Folder Include="Pages\clients\" />
+    <Folder Include="Pages\rentals\" />
+    <Folder Include="Pages\owners\" />
+  </ItemGroup>
+
+</Project>
