@@ -89,7 +89,7 @@ selectedCategories)
             }
             //Apelam UpdateBookCategories pentru a aplica informatiile din checkboxuri la entitatea Books care 
             //este editata 
-            UpdateApartmentcategories(_context, selectedCategories, ApartmentToUpdate);
+            UpdateApartamentcategories(_context, selectedCategories, ApartmentToUpdate);
             PopulateAssignedCategoryData(_context, ApartmentToUpdate);
             return Page();
         }
