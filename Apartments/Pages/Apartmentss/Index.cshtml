@@ -28,12 +28,22 @@
             <th>
                 @Html.DisplayNameFor(model => model.Apartment[0].Agent.AgentName) 
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apartment[0].Apartmentcategories)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Apartment) {
-        <tr>
+        @foreach (var item in Model.ApartmentD.Apartments)
+        {
+            string selectedRow = "";
+            if (item.ID == Model.ApartmentID)
+            {
+                selectedRow = "table-success";
+            }
+
+        <tr class="@selectedRow">
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
@@ -49,6 +59,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Agent.AgentName)
             </td>
+                <td>
+                    @{
+                        foreach (var category in item.Apartmentcategories)
+                        {
+                            @category.Category.ID @: @category.Category.CategoryName <br />
+                        }
+                    }
+                </td>
+
+
+
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |

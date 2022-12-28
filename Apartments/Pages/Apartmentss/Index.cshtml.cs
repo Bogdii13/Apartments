@@ -21,14 +21,29 @@ namespace Apartments.Pages.Apartmentss
 
         public IList<Apartment> Apartment { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public ApartmentData ApartmentD { get; set; }
+        public int ApartmentID { get; set; }
+        public int CategoryID { get; set; }
+        public async Task OnGetAsync(int? id, int? categoryID)
         {
-            if (_context.Apartment != null)
+            ApartmentD = new ApartmentData();
+
+            ApartmentD.Apartments = await _context.Apartment
+            .Include(b => b.Agent)
+            .Include(b => b.Apartmentcategories)
+            .ThenInclude(b => b.Category)
+            .AsNoTracking()
+            .OrderBy(b => b.Title)
+            .ToListAsync();
+            if (id != null)
             {
-                Apartment = await _context.Apartment
-                .Include(a => a.Agent)
-                .Include(a => a.Owner).ToListAsync();
+                ApartmentID = id.Value;
+                Apartment book = ApartmentD.Apartments
+                .Where(i => i.ID == id.Value).Single();
+                ApartmentD.Categories = book.Apartmentcategories.Select(s => s.Category);
             }
         }
+
     }
 }
+
