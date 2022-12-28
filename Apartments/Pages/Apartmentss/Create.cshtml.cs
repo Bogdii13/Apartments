@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Apartments.Data;
 using Apartments.Models;
 using Microsoft.EntityFrameworkCore;
+using Apartments.Models;
 
 namespace Apartments.Pages.Apartmentss
 {
-    public class CreateModel : PageModel
+    public class CreateModel : ApartamentCategoriesPageModel
     {
         private readonly Apartments.Data.ApartmentsContext _context;
 
@@ -31,24 +32,45 @@ namespace Apartments.Pages.Apartmentss
             ViewData["OwnerID"] = new SelectList(ownerList, "ID", "FullName");
             ViewData["AgentID"] = new SelectList(_context.Set<Models.Agent>(), "ID", "AgentName");
             return Page();
+            var Apartment = new Apartment();
+            Apartment.Apartmentcategories = new List<Apartamentcategory>();
+            PopulateAssignedCategoryData(_context, Apartment);
         }
+
 
         [BindProperty]
         public Apartment Apartment { get; set; }
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string[] selectedCategories)
         {
-          if (!ModelState.IsValid)
+            var newApartment = new Apartment();
+            if (selectedCategories != null)
             {
-                return Page();
+                newApartment.Apartmentcategories = new List<Apartamentcategory>();
+                foreach (var cat in selectedCategories)
+                {
+                    var catToAdd = new Apartamentcategory
+                    {
+                        CategoryID = int.Parse(cat)
+                    };
+                    newApartment.Apartmentcategories.Add(catToAdd);
+                }
             }
-
-            _context.Apartment.Add(Apartment);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            if (await TryUpdateModelAsync<Apartment>(
+            newApartment,
+            "Book",
+            i => i.Title, i => i.Owner,
+            i => i.Price, i => i.Date, i => i.AgentID))
+            {
+                _context.Apartment.Add(newApartment);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
+            }
+            PopulateAssignedCategoryData(_context, newApartment);
+            return Page();
         }
     }
 }
+
